@@ -1,22 +1,73 @@
 #!/usr/bin/ruby
 require 'irb/completion'
 require 'irb/ext/save-history'
-require 'rubygems'
+require 'rubygems' rescue nil
 
 IRB.conf[:SAVE_HISTORY] = 1000
 IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
 
 IRB.conf[:PROMPT_MODE] = :SIMPLE
 
+require 'wirble'
+require "hirb"
+require "ap"
+
+Wirble.init
+Wirble.colorize
+
+Hirb::View.enable
 IRB.conf[:AUTO_INDENT] = true
 
+def me
+  User.find_by_username('josh')
+end
+
+if ENV.include?('RAILS_ENV')
+  if !Object.const_defined?('RAILS_DEFAULT_LOGGER')
+    require 'logger'
+    Object.const_set('RAILS_DEFAULT_LOGGER', Logger.new(STDOUT))
+  end
+
+  def sql(query)
+    ActiveRecord::Base.connection.execute(query)
+  end
+
+  if ENV['RAILS_ENV'] == 'test'
+    require 'test/test_helper'
+  end
+
+# for rails 3
+elsif defined?(Rails) && !Rails.env.nil?
+  if Rails.logger
+    Rails.logger =Logger.new(STDOUT)
+    ActiveRecord::Base.logger = Rails.logger
+  end
+  if Rails.env == 'test'
+    require 'test/test_helper'
+  end
+else
+  # nothing to do
+end
+
+# annotate column names of an AR model
+def show(obj)
+  y(obj.send("column_names"))
+end
+
+IRB::Irb.class_eval do
+  def output_value
+    ap @context.last_value
+  end
+end
+
+puts "> all systems are go wirble/hirb/ap/show <"
+
 class Object
-  # list methods which aren't in superclass
   def local_methods(obj = self)
     (obj.methods - obj.class.superclass.instance_methods).sort
   end
-  
-  # print documentation
+
+    # print documentation
   #
   #   ri 'Array#pop'
   #   Array.ri
@@ -29,12 +80,4 @@ class Object
     end
     puts `ri '#{method}'`
   end
-end
-
-def me
-  User.find_by_login('holman')
-end
-
-def r
-  reload!
 end

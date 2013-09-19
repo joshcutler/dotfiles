@@ -1,1 +1,3 @@
-easy_install SpoofMAC
+brew install python
+
+pip install SpoofMAC

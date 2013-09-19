@@ -38,3 +38,24 @@ do
 done
 
 unset config_files
+
+### Private
+export PRIVATE=~/Dropbox/dotfiles_private
+
+# all of our private zsh files
+typeset -U config_files
+config_files=(${PRIVATE}/**/*.zsh)
+
+# load the path files
+for file in ${(M)config_files:#*/path.zsh}
+do
+  source $file
+done
+
+# load everything but the path and completion files
+for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+do
+  source $file
+done
+
+unset config_files
