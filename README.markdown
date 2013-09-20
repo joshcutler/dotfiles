@@ -1,4 +1,12 @@
-# holman does dotfiles
+# Cutler does dotfiles
+
+## Based on the Holman dotfiles
+
+# Permissions errors
+Can be fixed with
+```
+chmod -R 755 ~/.dotfiles
+```
 
 ## dotfiles
 
