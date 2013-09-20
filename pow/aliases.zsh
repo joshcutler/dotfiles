@@ -1,0 +1,1 @@
+alias pow="touch tmp/restart.txt; echo 'Pow Restarted.'"
