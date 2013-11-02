@@ -2,8 +2,6 @@
 #
 # bootstrap installs things.
 
-DOTFILES_ROOT="`pwd`"
-
 set -e
 
 echo ''
@@ -49,6 +47,7 @@ setup_gitconfig () {
 }
 
 link_files () {
+  mkdir -p `dirname "$2"`
   ln -s $1 $2
   success "linked $1 to $2"
 }
@@ -60,11 +59,14 @@ install_dotfiles () {
   backup_all=false
   skip_all=false
 
-  for source in `find $DOTFILES_ROOT -maxdepth 2 -name \*.symlink`
+  for source in `find . -name \*.symlink`
   do
-    dest="$HOME/.`basename \"${source%.*}\"`"
+    source="${source#*/}" # strip leading ./
+    dest="$HOME/.${source#*/}" # strip first directory
+    dest="${dest%.*}" # strip suffix
+    source="`pwd`/$source" # make path full
 
-    if [ -f $dest ] || [ -d $dest ]
+    if [ -f $dest ] || [ -d $dest ] || [ -h $dest ]
     then
 
       overwrite=false
