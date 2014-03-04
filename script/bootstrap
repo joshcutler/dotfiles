@@ -25,7 +25,7 @@ fail () {
 }
 
 setup_gitconfig () {
-  if ! [ -f git/gitconfig.symlink ]
+  if ! [ -f git/.gitconfig.symlink ]
   then
     info 'setup gitconfig'
 
@@ -62,7 +62,7 @@ install_dotfiles () {
   for source in `find . -name \*.symlink`
   do
     source="${source#*/}" # strip leading ./
-    dest="$HOME/.${source#*/}" # strip first directory
+    dest="$HOME/${source#*/}" # strip first directory
     dest="${dest%.*}" # strip suffix
     source="`pwd`/$source" # make path full
 
