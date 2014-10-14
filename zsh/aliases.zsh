@@ -11,7 +11,9 @@ alias ttl='tail -f ./log/test.log'
 alias ctl='> ./log/test.log'
 alias cdl='> ./log/development.log'
 alias guard='nocorrect guard'
-alias rake='noglob rake'
+alias resetsound='sudo kextunload /System/Library/Extensions/AppleHDA.kext; sudo kextload /System/Library/Extensions/AppleHDA.kext'
+alias hidedesktop='defaults write com.apple.finder CreateDesktop false; killall Finder'
+alias showdesktop='defaults write com.apple.finder CreateDesktop true; killall Finder'
 
 # launching console/server
 sc () {
